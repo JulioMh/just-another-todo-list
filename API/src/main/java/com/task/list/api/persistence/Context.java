@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.codec.Hex;
-
-import java.nio.charset.StandardCharsets;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 
 @Configuration
@@ -28,17 +26,17 @@ public class Context {
             ITaskRepository taskRepository
     ) {
         return args -> {
-            User user = new User("kilojulio", Hex.encode("patata".getBytes(StandardCharsets.UTF_8)));
-            log.info("Create user " + userRepository.save(user));
-            TaskList taskList = new TaskList("Things to buy", user);
-            log.info("Create taskList " + taskListRepository.save(taskList));
+            var user = new User("kilojulio", new BCryptPasswordEncoder().encode("patata"));
+            log.info("Create user {}", userRepository.save(user));
+            var taskList = new TaskList("Things to buy", user);
+            log.info("Create taskList {}", taskListRepository.save(taskList));
             user.setTaskLists(List.of(taskList));
-            log.info("Link taskList to user " + userRepository.save(user));
-            Task task = new Task("Buy apples", TaskStatus.PENDING, taskList);
+            log.info("Link taskList to user {}", userRepository.save(user));
+            var task = new Task("Buy apples", TaskStatus.PENDING, taskList);
             List<Task> list = taskList.getTaskList();
             list.add(task);
             taskList.setTaskList(list);
-            log.info("Create task " + taskRepository.save(task));
+            log.info("Create task {}", taskRepository.save(task));
 
             log.info("Done");
         };

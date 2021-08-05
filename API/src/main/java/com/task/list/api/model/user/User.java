@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 public class User {
 
-    public User (String username, char[] passowrd) {
+    public User (String username, String passowrd) {
         this.username = username;
         this.password = passowrd;
         taskLists = new ArrayList<>();
@@ -36,7 +36,7 @@ public class User {
 
     private
     @NotNull
-    char[] password;
+    String password;
 
     // With mappedBy we are telling to JPA that the relationship has already been defined by another entity (no need to create another FK)
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )

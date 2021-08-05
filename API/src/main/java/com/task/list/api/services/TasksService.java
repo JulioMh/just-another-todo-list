@@ -4,7 +4,7 @@ import com.task.list.api.dto.mapper.TaskListToDTO;
 import com.task.list.api.dto.mapper.TaskToDTO;
 import com.task.list.api.dto.model.TaskDTO;
 import com.task.list.api.dto.model.TaskListDTO;
-import com.task.list.api.exception.NotFoundException;
+import com.task.list.api.exception.EntityNotFoundException;
 import com.task.list.api.model.task.Task;
 import com.task.list.api.model.task.TaskList;
 import com.task.list.api.model.task.TaskStatus;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,9 +48,9 @@ public class TasksService implements ITasksService {
 
     @Override
     public TaskListDTO createTaskList(TaskListDTO taskListDTO, Long userId) {
-        User user = getUser(userId);
+        var user = getUser(userId);
 
-        TaskList taskList = new TaskList()
+        var taskList = new TaskList()
                 .setName(taskListDTO.getName())
                 .setUser(user)
                 .setTaskList(new ArrayList<>());
@@ -96,9 +95,9 @@ public class TasksService implements ITasksService {
 
     @Override
     public TaskDTO createTask(TaskDTO taskDTO, Long taskListId) {
-        TaskList taskList = getTaskList(taskListId);
+        var taskList = getTaskList(taskListId);
 
-        Task task = new Task()
+        var task = new Task()
                 .setDescription(taskDTO.getDescription())
                 .setStatus(TaskStatus.PENDING)
                 .setTaskList(taskList);
@@ -117,7 +116,7 @@ public class TasksService implements ITasksService {
 
     @Override
     public TaskDTO updateTask(TaskDTO taskDTO) {
-        Task task = getTask(taskDTO.getId());
+        var task = getTask(taskDTO.getId());
         return toTaskDTO(taskRepository.save(
                 task
                         .setStatus(
@@ -134,16 +133,16 @@ public class TasksService implements ITasksService {
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("user", userId));
+                .orElseThrow(() -> new EntityNotFoundException("user", userId));
     }
 
     private TaskList getTaskList(Long taskListId) {
         return taskListRepository.findById(taskListId)
-                .orElseThrow(() -> new NotFoundException("taskList", taskListId));
+                .orElseThrow(() -> new EntityNotFoundException("taskList", taskListId));
     }
 
     private Task getTask(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException("task", taskId));
+                .orElseThrow(() -> new EntityNotFoundException("task", taskId));
     }
 }
