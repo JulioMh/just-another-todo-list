@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 
-const taskService = auth => ({
+const taskService = (configuration) => ({
   getAll: async (taskListId) => {
-    const response = await axios.get(`http://localhost:8080/taskLists/${taskListId}/tasks`, auth)
+    const response = await axios.get(`${configuration.baseUrl}/taskLists/${taskListId}/tasks`, configuration)
 
     return response.data
   },
   create: async (task, taskListId) => {
-    const response = await axios.post(`http://localhost:8080/taskLists/${taskListId}/tasks`, task, auth)
+    const response = await axios.post(`${configuration.baseUrl}/taskLists/${taskListId}/tasks`, task, configuration)
       .catch(error => ({
         status: error.response.status,
         data: error.response.data

@@ -1,0 +1,1 @@
+export const getTaskLists = state => state.taskList.allTaskLists

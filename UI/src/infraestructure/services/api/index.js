@@ -1,7 +1,9 @@
-import task from 'task'
+import taskService from './task'
+import taskListService from './taskList'
 
-const api = (auth) => ({
-  task: task(auth)
+const api = (configuration) => ({
+  task: taskService(configuration),
+  taskList: taskListService(configuration)
 })
 
 export default api
